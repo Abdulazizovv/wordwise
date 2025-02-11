@@ -1,3 +1,12 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import BotUser
+
+
+class BotUserAdmin(admin.ModelAdmin):
+    list_display = ('first_name', 'last_name', 'phone_number', 'username')
+    search_fields = ('username', 'first_name', 'last_name', 'phone_number')
+    ordering = ('-created_at', )
+
+
+admin.site.register(BotUser, BotUserAdmin)
