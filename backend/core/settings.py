@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     
     # local apps
     'botapp',
-    'users'
+    'users',
+    'main',
 ]
 
 MIDDLEWARE = [
