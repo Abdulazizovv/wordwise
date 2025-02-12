@@ -95,3 +95,91 @@ class Answer(models.Model):
     class Meta:
         ordering = ['-created_at']
         verbose_name_plural = 'Answers'
+
+
+class UserWords(models.Model):
+    user = models.ForeignKey('users.User', related_name='user_words', on_delete=models.CASCADE)
+    word = models.ForeignKey(Word, related_name='user_words', on_delete=models.CASCADE)
+    category = models.ForeignKey(WordCategory, related_name='user_words', on_delete=models.CASCADE)
+    is_favorite = models.BooleanField(default=False)
+    is_learned = models.BooleanField(default=False)
+    is_difficult = models.BooleanField(default=False)
+    is_skipped = models.BooleanField(default=False)
+    is_liked = models.BooleanField(default=False)
+    is_disliked = models.BooleanField(default=False)
+    is_ignored = models.BooleanField(default=False)
+    is_archived = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False)
+    is_public = models.BooleanField(default=False)
+    is_private = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.word.name} ({self.category.name})"
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name_plural = 'User Words'
+        unique_together = ('user', 'word', 'category')
+
+
+class UserWordCategories(models.Model):
+    user = models.ForeignKey('users.User', related_name='user_word_categories', on_delete=models.CASCADE)
+    category = models.ForeignKey(WordCategory, related_name='user_word_categories', on_delete=models.CASCADE)
+    is_favorite = models.BooleanField(default=False)
+    is_learned = models.BooleanField(default=False)
+    is_difficult = models.BooleanField(default=False)
+    is_skipped = models.BooleanField(default=False)
+    is_liked = models.BooleanField(default=False)
+    is_disliked = models.BooleanField(default=False)
+    is_ignored = models.BooleanField(default=False)
+    is_archived = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False)
+    is_public = models.BooleanField(default=False)
+    is_private = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.category.name}"
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name_plural = 'User Word Categories'
+        unique_together = ('user', 'category')
+
+
+class UserQuestions(models.Model):
+    user = models.ForeignKey('users.User', related_name='user_questions', on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, related_name='user_questions', on_delete=models.CASCADE)
+    is_favorite = models.BooleanField(default=False)
+    is_learned = models.BooleanField(default=False)
+    is_difficult = models.BooleanField(default=False)
+    is_skipped = models.BooleanField(default=False)
+    is_liked = models.BooleanField(default=False)
+    is_disliked = models.BooleanField(default=False)
+    is_ignored = models.BooleanField(default=False)
+    is_archived = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False)
+    is_public = models.BooleanField(default=False)
+    is_private = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.question.text}"
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name_plural = 'User Questions'
+        unique_together = ('user', 'question')
