@@ -7,5 +7,6 @@ env.read_env()
 # .env fayl ichidan quyidagilarni o'qiymiz
 BOT_TOKEN = env.str("BOT_TOKEN")  # Bot token
 ADMINS = env.list("ADMINS")  # adminlar ro'yxati
+API_URL = env.str("API_URL")  # API URL manzili
 
 
