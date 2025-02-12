@@ -11,7 +11,7 @@ def create_user(sender, instance, created, **kwargs):
     if created:
         if instance.phone_number and instance.first_name:
             if not User.objects.filter(phone_number=instance.phone_number).exists():
-                User.objects.create(phone_number=instance.phone_number, first_name=instance.first_name)
+                User.objects.create(phone_number=instance.phone_number, first_name=instance.first_name, last_name=instance.last_name, tg_account=instance)
                 logging.info(f'User created with phone number {instance.phone_number}')
             else:
                 logging.info(f'User with phone number {instance.phone_number} already exists')
