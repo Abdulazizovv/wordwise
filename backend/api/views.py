@@ -1,3 +1,10 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from botapp.models import BotUser
+from main.models import Word, WordCategory, Question, UserWordCategories, UserWords, UserQuestions
 
-# Create your views here.
+from botapp.serializers import BotUserSerializer
+
+
+class BotUserViewSet(viewsets.ModelViewSet):
+    queryset = BotUser.objects.all()
+    serializer_class = BotUserSerializer
