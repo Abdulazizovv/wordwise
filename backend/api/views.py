@@ -5,6 +5,7 @@ from rest_framework.decorators import action
 from rest_framework import status
 from rest_framework.response import Response
 from botapp.serializers import BotUserSerializer
+from main.serializers import WordSerializer, WordCategorySerializer
 
 
 class BotUserViewSet(viewsets.ModelViewSet):
@@ -20,3 +21,13 @@ class BotUserViewSet(viewsets.ModelViewSet):
         user = BotUser.objects.filter(user_id=user_id).first()
 
         return Response({True}, status=status.HTTP_200_OK) if user else Response({False}, status=status.HTTP_200_OK)
+
+
+class WordViewSet(viewsets.ModelViewSet):
+    queryset = Word.objects.all()
+    serializer_class = WordSerializer
+
+
+class WordCategoryViewSet(viewsets.ModelViewSet):
+    queryset = WordCategory.objects.all()
+    serializer_class = WordCategorySerializer

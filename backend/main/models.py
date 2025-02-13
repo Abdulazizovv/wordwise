@@ -26,7 +26,8 @@ class WordCategory(models.Model):
 
 
 class Word(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=255)
+    translation = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     category = models.ForeignKey(WordCategory, related_name='words', on_delete=models.CASCADE)
     owner = models.ForeignKey('users.User', related_name='words', on_delete=models.CASCADE, null=True, blank=True)
