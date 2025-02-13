@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from rest_framework import status
 from rest_framework.response import Response
 from botapp.serializers import BotUserSerializer
-from main.serializers import WordSerializer, WordCategorySerializer
+from main.serializers import WordSerializer, WordCategorySerializer, UserWordCategoriesSerializer
 
 
 class BotUserViewSet(viewsets.ModelViewSet):
@@ -31,3 +31,10 @@ class WordViewSet(viewsets.ModelViewSet):
 class WordCategoryViewSet(viewsets.ModelViewSet):
     queryset = WordCategory.objects.all()
     serializer_class = WordCategorySerializer
+
+
+class UserWordCategoriesViewSet(viewsets.ModelViewSet):
+    queryset = UserWordCategories.objects.all()
+    serializer_class = UserWordCategoriesSerializer
+    lookup_field = 'user_id'
+    

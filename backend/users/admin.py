@@ -11,7 +11,7 @@ class ProfileInline(admin.StackedInline):
 
 class UserAdmin(admin.ModelAdmin):
     inlines = (ProfileInline, )
-    list_display = ('first_name', 'last_name', 'phone_number', 'is_staff', 'is_active', 'is_superuser')
+    list_display = ('id', 'first_name', 'last_name', 'phone_number', 'is_staff', 'is_active', 'is_superuser')
     list_select_related = ('profile', )
     search_fields = ('username', 'email')
     readonly_fields = ('date_joined', 'last_login')

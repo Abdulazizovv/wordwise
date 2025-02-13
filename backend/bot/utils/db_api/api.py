@@ -103,3 +103,13 @@ def update_user(user_id: int, **kwargs):
     """
     return api.put(f"botuser/{user_id}", json=kwargs)
 
+
+# get all user categories
+def get_user_categories(user_id: int):
+    """
+    Get all user categories
+    user_id is telegram user id
+    :param user_id: int
+    :return: dict
+    """
+    return api.get(f"botuser/{user_id}/categories")
