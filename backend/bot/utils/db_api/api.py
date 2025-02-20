@@ -64,6 +64,18 @@ def get_user(user_id: int):
     """
     return api.get(f"botuser/{user_id}")
 
+
+# Get user via telegram account
+def get_user_by_tg_account(tg_account: str):
+    """
+    Get user via telegram account
+    tg_account is telegram user id
+    :param tg_account: str
+    :return: dict
+    """
+    return api.get(f"users/{tg_account}")
+
+
 # Check user
 def check_user(user_id: int):
     """
@@ -113,3 +125,27 @@ def get_user_categories(user_id: int):
     :return: dict
     """
     return api.get(f"botuser/{user_id}/categories")
+
+
+# get bot user categories
+def get_bot_user_categories(user_id: int):
+    """
+    Get bot user categories
+    user_id is telegram user id
+    :param user_id: int
+    :return: dict
+    """
+    return api.get(f"userwordcategories/get_bot_user_categories/?user_id={user_id}")
+
+
+# create category
+def create_category(user_id: int, name: str, description: str):
+    """
+    Create category
+    user_id is telegram user id
+    :param user_id: int
+    :param name: str
+    :param description: str
+    :return: dict
+    """
+    return api.post("wordcategories/create_category/", json={"user_id": user_id, "category_name": name, "category_description": description})
