@@ -10,6 +10,7 @@ from users.serializers import UserSerializer
 from users.models import User
 from django.shortcuts import get_object_or_404
 import logging
+from rest_framework.pagination import PageNumberPagination
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -64,11 +65,19 @@ class WordCategoryViewSet(viewsets.ModelViewSet):
             return Response({"detail": "Error"}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({"detail": "OK"}, status=status.HTTP_201_CREATED)
+    
+
+
+class UserWordCategoryPagination(PageNumberPagination):
+    page_size = 5
+    page_size_query_param = 'page_size'
+    max_page_size = 20
 
 
 class UserWordCategoriesViewSet(viewsets.ModelViewSet):
     queryset = UserWordCategories.objects.all()
     serializer_class = UserWordCategoriesSerializer
+    pagination_class = UserWordCategoryPagination
 
     @action(detail=False, methods=['get'])
     def get_bot_user_categories(self, request):
@@ -82,7 +91,28 @@ class UserWordCategoriesViewSet(viewsets.ModelViewSet):
         user_categories = UserWordCategories.objects.filter(user=user)
         if not user_categories.exists():
             return Response({"detail": "No categories found for this user"}, status=status.HTTP_404_NOT_FOUND)
+        
+        page = self.paginate_queryset(user_categories)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
 
         serializer = UserWordCategoriesSerializer(user_categories, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    @action(detail=False, methods=['get'])
+    def check_category_exists(self, request):
+        user_id = request.query_params.get('user_id')
+        category_name = request.query_params.get('name')
+        if not user_id or not category_name:
+            return Response({"detail": "user_id and category_name are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        bot_user = get_object_or_404(BotUser, user_id=user_id)
+        user = get_object_or_404(User, tg_account=bot_user)
+
+        category = UserWordCategories.objects.filter(user=user, category__name=category_name).first()
+        if not category:
+            return Response({"detail": "Not Exists"}, status=status.HTTP_200_OK)
+        
+        return Response({"detail": "Exists"}, status=status.HTTP_200_OK)
     

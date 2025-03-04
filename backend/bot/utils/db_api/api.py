@@ -2,6 +2,7 @@ import requests
 from requests.adapters import HTTPAdapter
 from requests.exceptions import HTTPError
 from bot.data.config import API_URL
+import logging
 
 class API:
     def __init__(self, url: str):
@@ -10,45 +11,47 @@ class API:
         self.session.mount("https://", HTTPAdapter(max_retries=3))
         self.session.mount("http://", HTTPAdapter(max_retries=3))
 
-    def get(self, endpoint: str, **kwargs):
+    def get(self, endpoint: str):
         try:
-            response = self.session.get(f"{self.url}/{endpoint}", **kwargs)
-            response.raise_for_status()
-        except HTTPError as e:
-            raise e
-        return response.json()
+            response = self.session.get(f"{self.url}/{endpoint}")
+            return response.json()
+        except HTTPError as http_err:
+            logging.error(f"HTTP error occurred: {http_err}")
+        except Exception as err:
+            logging.error(f"An error occurred: {err}")
+        return None
+    
+    def post(self, endpoint: str, json: dict):
+        try:
+            response = self.session.post(f"{self.url}/{endpoint}", json=json)
+            return response.json()
+        except HTTPError as http_err:
+            logging.error(f"HTTP error occurred: {http_err}")
+        except Exception as err:
+            logging.error(f"An error occurred: {err}")
+        return None
+    
+    def put(self, endpoint: str, json: dict):
+        try:
+            response = self.session.put(f"{self.url}/{endpoint}", json=json)
+            return response.json()
+        except HTTPError as http_err:
+            logging.error(f"HTTP error occurred: {http_err}")
+        except Exception as err:
+            logging.error(f"An error occurred: {err}")
+        return None
+    
+    def delete(self, endpoint: str):
+        try:
+            response = self.session.delete(f"{self.url}/{endpoint}")
+            return response.json()
+        except HTTPError as http_err:
+            logging.error(f"HTTP error occurred: {http_err}")
+        except Exception as err:
+            logging.error(f"An error occurred: {err}")
+        return
+    
 
-    def post(self, endpoint: str, **kwargs):
-        try:
-            response = self.session.post(f"{self.url}/{endpoint}", **kwargs)
-            response.raise_for_status()
-        except HTTPError as e:
-            raise e
-        return response.json()
-
-    def put(self, endpoint: str, **kwargs):
-        try:
-            response = self.session.put(f"{self.url}/{endpoint}", **kwargs)
-            response.raise_for_status()
-        except HTTPError as e:
-            raise e
-        return response.json()
-
-    def delete(self, endpoint: str, **kwargs):
-        try:
-            response = self.session.delete(f"{self.url}/{endpoint}", **kwargs)
-            response.raise_for_status()
-        except HTTPError as e:
-            raise e
-        return response.json()
-
-    def patch(self, endpoint: str, **kwargs):
-        try:
-            response = self.session.patch(f"{self.url}/{endpoint}", **kwargs)
-            response.raise_for_status()
-        except HTTPError as e:
-            raise e
-        return response.json()
     
 
 api = API(API_URL)
@@ -128,14 +131,14 @@ def get_user_categories(user_id: int):
 
 
 # get bot user categories
-def get_bot_user_categories(user_id: int):
+def get_bot_user_categories(user_id: int, page: int=1):
     """
     Get bot user categories
     user_id is telegram user id
     :param user_id: int
     :return: dict
     """
-    return api.get(f"userwordcategories/get_bot_user_categories/?user_id={user_id}")
+    return api.get(f"userwordcategories/get_bot_user_categories/?user_id={user_id}&page={page}")
 
 
 # create category
@@ -149,3 +152,13 @@ def create_category(user_id: int, name: str, description: str):
     :return: dict
     """
     return api.post("wordcategories/create_category/", json={"user_id": user_id, "category_name": name, "category_description": description})
+
+
+# check category exists
+def check_category_exists(name: str, user_id: int):
+    """
+    Check category exists
+    :param name: str
+    :return: dict
+    """
+    return api.get(f"userwordcategories/check_category_exists/?name={name}&user_id={user_id}")

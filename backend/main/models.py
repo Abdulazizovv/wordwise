@@ -1,7 +1,7 @@
 from django.db import models
 
 class WordCategory(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
     owner = models.ForeignKey('users.User', related_name='word_categories', on_delete=models.CASCADE, null=True, blank=True)
     

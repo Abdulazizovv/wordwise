@@ -1,4 +1,5 @@
 from . import help
+from . import main_menu
 from . import start
 from . import categories
 
